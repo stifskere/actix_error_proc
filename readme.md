@@ -2,7 +2,7 @@
 `actix_error_proc` is a small library to integrate `thiserror` into `actix_web` routes
 with procedural macros.
 
-This library has two main macros as well as a `thiserror` re export under a feature.
+This library has two main macros as well as a `thiserror` re export under the `thiserror` feature.
 
 ## `ActixError`
 This macro is used together with `thiserror::Error` and it allows the user
