@@ -63,7 +63,7 @@ There is a type alias for that Result which is `actix_error_proc::HttpResult<E>`
 
 An example usage of the `proof_route` procedural macro look like this
 
-```
+```rust
 use actix_error_proc::{ActixError, Error, HttpResult}; // Error is a thiserror re export.
 use crate::models::user::User;
 use actix_web::{main, App, HttpServer}
