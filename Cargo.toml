@@ -1,0 +1,6 @@
+[workspace]
+members = [
+	"actix_error_proc",
+	"actix_error_proc_macros"
+]
+resolver = "1"

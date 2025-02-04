@@ -1,0 +1,13 @@
+[package]
+name = "actix_error_proc_macros"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.9.0"
+quote = "1.0.38"
+syn = { version = "2.0.98", features = ["full", "fold", "parsing"] }
+thiserror = "2.0.11"
+
+[lib]
+proc-macro = true
