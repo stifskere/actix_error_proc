@@ -1,0 +1,39 @@
+name: Publish to Cargo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: "test"
+    steps:
+      - uses: actions/checkout@master
+        name: "checkout"
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-rust@v1
+        name: "setup rust"
+        with:
+          rust-version: stable
+
+      - name: "Run tests"
+        run: cargo test -p actix_error_proc
+
+  publish:
+    runs-on: ubuntu-latest
+    name: "publish"
+    needs: test
+    steps:
+      - uses: actions/checkout@master
+        name: "checkout"
+        with:
+          fetch-depth: 0
+
+      - uses: katyo/publish-crates@v2
+        name: "publish"
+        with:
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          path: actix_error_proc

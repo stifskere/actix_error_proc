@@ -6,7 +6,7 @@ repository = "https://github.com/stifskere/actix_error_proc"
 license = "MIT"
 keywords = ["actix_web", "actix", "thiserror", "macros", "error"]
 categories = ["web-programming"]
-version = "1.0.0"
+version = "0.1.0"
 edition = "2021"
 
 [dependencies]
