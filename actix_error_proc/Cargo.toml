@@ -1,7 +1,7 @@
 [package]
 name = "actix_error_proc"
 description = "A small crate to integrate thiserror with actix_web."
-readme = "readme.md"
+readme = "../readme.md"
 repository = "https://github.com/stifskere/actix_error_proc"
 license = "MIT"
 keywords = ["actix_web", "actix", "thiserror", "macros", "error"]
