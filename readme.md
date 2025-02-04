@@ -41,7 +41,7 @@ use actix_error_proc::{ActixError, Error}; // Error is a thiserror re export.
 // at the request level.
 fn transform_error(mut res: HttpResponseBuilder, fmt: String) -> HttpResponse {
     res
-		.insert_header(("Test", "This is a test header"))
+	.insert_header(("Test", "This is a test header"))
         .json(json!({"error": fmt})) // by default the response is the raw string.
 }
 
