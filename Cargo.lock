@@ -191,7 +191,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "actix_error_proc",
- "actix_error_proc_macros",
+ "actix_error_proc_macros 0.1.0",
  "reqwest",
  "thiserror",
  "tokio",
@@ -200,6 +200,18 @@ dependencies = [
 [[package]]
 name = "actix_error_proc_macros"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c7f8b4d6f2e1b4025ecff89c97edcef15cff9279c0cfa2a03b37ce8d9ac6fc1"
+dependencies = [
+ "actix-web",
+ "quote",
+ "syn",
+ "thiserror",
+]
+
+[[package]]
+name = "actix_error_proc_macros"
+version = "0.1.1"
 dependencies = [
  "actix-web",
  "quote",
