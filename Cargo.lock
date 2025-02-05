@@ -187,7 +187,7 @@ dependencies = [
 
 [[package]]
 name = "actix_error_proc"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "actix-web",
  "actix_error_proc_macros 0.1.0",
