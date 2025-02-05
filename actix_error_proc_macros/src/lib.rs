@@ -12,7 +12,7 @@ use syn::{
 ///
 /// Example usage with `thiserror` could look like this:
 ///
-/// ```rust
+/// ```ignore
 /// use actix_error_proc::{ActixError, Error}; // Error is a thiserror re export.
 ///
 /// #[derive(ActixError, Error, Debug)]
@@ -35,7 +35,7 @@ use syn::{
 /// a function that transforms the request, letting you add headers
 /// and other things in the response.
 ///
-/// ```rust
+/// ```ignore
 /// use actix_error_proc::{ActixError, Error}; // Error is a thiserror re export.
 ///
 /// // This should not throw any error, the errors should be handled
@@ -105,7 +105,7 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
         }
 
         let pattern = match &variant.fields {
-            Fields::Unnamed(_) => quote! { Self::#variant_name(err) },
+            Fields::Unnamed(_) => quote! { Self::#variant_name(..) },
             Fields::Named(_) => quote! { Self::#variant_name { .. } },
             Fields::Unit => quote! { Self::#variant_name },
         };
@@ -136,7 +136,7 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
 ///
 /// The usage in a route handler is the following.
 ///
-/// ```rust
+/// ```ignore
 /// use actix_error_proc::{ActixError, Error, HttpResult}; // Error is a thiserror re export.
 /// use crate::models::user::User;
 /// use actix_web::{main, App, HttpServer}

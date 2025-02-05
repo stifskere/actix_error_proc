@@ -187,14 +187,11 @@ dependencies = [
 
 [[package]]
 name = "actix_error_proc"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "actix-web",
- "actix_error_proc",
  "actix_error_proc_macros 0.1.0",
- "reqwest",
  "thiserror",
- "tokio",
 ]
 
 [[package]]
@@ -211,12 +208,15 @@ dependencies = [
 
 [[package]]
 name = "actix_error_proc_macros"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "actix-web",
+ "actix_error_proc_macros 0.1.2",
  "quote",
+ "reqwest",
  "syn",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

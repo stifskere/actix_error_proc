@@ -1,3 +1,7 @@
+use actix_web::HttpResponse;
+
+pub type HttpResult<E> = Result<HttpResponse, E>;
+
 #[macro_export]
 macro_rules! web_server {
     ($route:expr) => {{

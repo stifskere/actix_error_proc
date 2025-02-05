@@ -1,4 +1,6 @@
-use actix_error_proc::{proof_route, ActixError, Error, HttpResult};
+use actix_error_proc_macros::{proof_route, ActixError};
+use thiserror::Error;
+use crate::shared::HttpResult;
 use reqwest::{get, Client, StatusCode};
 use tokio::test;
 
@@ -15,7 +17,10 @@ enum TestError {
     Test2,
 
     #[error("test3")]
-    Test3
+    Test3,
+
+    #[error("test4 {0} {1}")]
+    Test4(i32, i32)
 }
 
 #[proof_route(get("/"))]
@@ -31,6 +36,11 @@ async fn test2_route() -> HttpResult<TestError> {
 #[proof_route(get("/"))]
 async fn test3_route() -> HttpResult<TestError> {
     Err(TestError::Test3)
+}
+
+#[proof_route(get("/"))]
+async fn test4_route() -> HttpResult<TestError> {
+    Err(TestError::Test4(1, 2))
 }
 
 #[test]
@@ -93,6 +103,27 @@ async fn default_is_internal_server_error() {
         .expect("Error while reading response body.");
 
     assert_eq!(text, "test3");
+
+    server.stop(true).await;
+    thread.join().unwrap();
+}
+
+#[test]
+async fn should_print_both_numbers_in_display() {
+    let (thread, server, address) = web_server!(test4_route);
+
+    let result = get(address)
+        .await
+        .expect("Error while making the request.");
+
+    assert_eq!(result.status(), StatusCode::INTERNAL_SERVER_ERROR);
+
+    let text = result
+        .text()
+        .await
+        .expect("Error while reading response body.");
+
+    assert_eq!(text, "test4 1 2");
 
     server.stop(true).await;
     thread.join().unwrap();

@@ -3,13 +3,19 @@ name = "actix_error_proc_macros"
 description = "Procedural macros for the actix_error_proc package."
 repository = "https://github.com/stifskere/actix_error_proc"
 license = "MIT"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 [dependencies]
 actix-web = "4.9.0"
 quote = "1.0.38"
 syn = { version = "2.0.98", features = ["full", "fold", "parsing"] }
+thiserror = "2.0.11"
+
+[dev-dependencies]
+tokio = { version = "1.43.0", features = ["macros"] }
+actix_error_proc_macros = { path = "." }
+reqwest = "0.12.12"
 thiserror = "2.0.11"
 
 [lib]

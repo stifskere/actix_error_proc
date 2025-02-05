@@ -1,5 +1,7 @@
-use actix_error_proc::{proof_route, ActixError, Error, HttpResult};
 use actix_web::{HttpResponse, HttpResponseBuilder};
+use crate::shared::HttpResult;
+use thiserror::Error;
+use actix_error_proc_macros::{proof_route, ActixError};
 use reqwest::{get, StatusCode};
 use tokio::test;
 

@@ -16,8 +16,3 @@ thiserror = { version = "2.0.11", optional = true }
 
 [features]
 thiserror = ["dep:thiserror"]
-
-[dev-dependencies]
-tokio = { version = "1.43.0", features = ["macros"] }
-actix_error_proc = { path = ".", features = ["thiserror"] }
-reqwest = "0.12.12"
