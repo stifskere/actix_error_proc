@@ -6,7 +6,9 @@ This library has two main macros as well as a `thiserror` re export under the `t
 
 ## `ActixError`
 This macro is used together with `thiserror::Error` and it allows the user
-to add a few more attributes to the error enumerable.
+to add a few more attributes to the error enumerable. This macro in reality
+it simply implements `Into<actix_web::HttpResponse>` and `Into<actix_web::Error>`
+for the sake of it being used in routes and collectors.
 
 A basic usage of this macro looks like this
 

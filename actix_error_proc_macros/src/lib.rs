@@ -1,6 +1,6 @@
 use core::panic;
 use proc_macro::{Span, TokenStream};
-use quote::{quote, ToTokens};
+use quote::{format_ident, quote, ToTokens};
 use syn::{
     parse_macro_input, spanned::Spanned, Data, DeriveInput, Expr, ExprCall, ExprLit, Fields, FnArg,
     Ident, ItemFn, Lit, Meta,
@@ -90,16 +90,17 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
         None
     });
 
-    let mut arms = Vec::new();
+    let mut into_response_arms = Vec::new();
+    let mut into_error_arms = Vec::new();
 
     for variant in &data_enum.variants {
-        let mut http_method = quote! { actix_web::HttpResponse::InternalServerError() };
+        let mut raw_http_code = quote! { InternalServerError };
         let variant_name = &variant.ident;
 
         for attr in &variant.attrs {
             if attr.path().is_ident("http_status") {
                 if let Ok(ident) = attr.parse_args::<Ident>() {
-                    http_method = quote! { actix_web::HttpResponse::#ident() };
+                    raw_http_code = quote! { #ident };
                 }
             }
         }
@@ -110,17 +111,29 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
             Fields::Unit => quote! { Self::#variant_name },
         };
 
-        arms.push(match transformer {
-            Some(ref tr) => quote! { #pattern => #tr(#http_method, format!("{:#}", self)) },
-            None => quote! { #pattern => #http_method.body(format!("{:#}", self)) },
+        let response_code = quote! { actix_web::HttpResponse::#raw_http_code() };
+        into_response_arms.push(match transformer {
+            Some(ref tr) => quote! { #pattern => #tr(#response_code, format!("{:#}", self)) },
+            None => quote! { #pattern => #response_code.body(format!("{:#}", self)) },
         });
+
+        let error_ident = format_ident!("Error{}", raw_http_code.to_string());
+        into_error_arms.push(quote! { #pattern => actix_web::error::#error_ident(format!("{:#}", self)) });
     }
 
     TokenStream::from(quote! {
         impl ::core::convert::Into<actix_web::HttpResponse> for #enum_name {
             fn into(self) -> actix_web::HttpResponse {
                 match self {
-                    #(#arms),*
+                    #(#into_response_arms),*
+                }
+            }
+        }
+
+        impl ::core::convert::Into<actix_web::Error> for #enum_name {
+            fn into(self) -> actix_web::Error {
+                match self {
+                    #(#into_error_arms),*
                 }
             }
         }

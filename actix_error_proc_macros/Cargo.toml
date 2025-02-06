@@ -3,7 +3,7 @@ name = "actix_error_proc_macros"
 description = "Procedural macros for the actix_error_proc package."
 repository = "https://github.com/stifskere/actix_error_proc"
 license = "MIT"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [dependencies]
