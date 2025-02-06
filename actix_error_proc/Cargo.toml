@@ -11,7 +11,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.9.0"
-actix_error_proc_macros = "0.2.0"
+actix_error_proc_macros = "0.2.1"
 thiserror = { version = "2.0.11", optional = true }
 
 [features]
