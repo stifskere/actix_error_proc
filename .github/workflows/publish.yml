@@ -18,7 +18,7 @@ jobs:
         name: "setup rust"
 
       - name: "Run tests"
-        run: cargo test -p actix_error_proc
+        run: cargo test -p actix_error_proc_macros
 
   publish:
     runs-on: ubuntu-latest
