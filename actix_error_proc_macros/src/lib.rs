@@ -116,7 +116,7 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
         });
     }
 
-    let expanded = quote! {
+    TokenStream::from(quote! {
         impl ::core::convert::Into<actix_web::HttpResponse> for #enum_name {
             fn into(self) -> actix_web::HttpResponse {
                 match self {
@@ -124,9 +124,7 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
                 }
             }
         }
-    };
-
-    TokenStream::from(expanded)
+    })
 }
 
 /// This macro attribute wraps actix http route handlers, due to
@@ -170,6 +168,25 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
 ///         .await
 /// }
 /// ```
+///
+/// There is an extra attribute we can add to route collectors to override
+/// it's error status code, in the case we don't want the original status code
+/// or we didn't create the collector and the original error does not match our
+/// expectations we can use `#[or]`, which lets us specify an error branch
+/// from any type instance that implements `Into<HttpResponse>`.
+///
+/// ```ignore
+/// #[proof_route(post("/"))]
+/// async fn route(#[or(SomeError::InvalidUser)] user: Json<User>) // ...
+/// ```
+///
+/// In this case if `Json<User>` fails while collecting from the http request
+/// whatever `<SomeError::InvalidUser as Into<actix_web::HttpResponse>>.into()` returns
+/// will be passed directly as a response for the route.
+///
+/// If you don't add the attribute, the request will be collected as normal and in the
+/// case of any error the original error implementation for that collector will
+/// be applied.
 #[proc_macro_attribute]
 pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attr as ExprCall);
@@ -214,21 +231,53 @@ pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
         panic!("Expected only one argument.");
     }
 
-    let inputs = item.sig.inputs.to_token_stream();
-    let input_names = item.sig.inputs.iter().map(|arg| {
+    let mut extractions = Vec::new();
+    let mut renamed_vars = Vec::new();
+
+    for arg in &mut item.sig.inputs {
         if let FnArg::Typed(pat_type) = arg {
-            pat_type.pat.to_token_stream()
-        } else {
-            quote! { self }
+            let var_name = &pat_type.pat;
+            let ty = &pat_type.ty;
+
+            let mut error_variant = None;
+
+            pat_type.attrs.retain(|attr| {
+                if attr.path().is_ident("or") {
+                    error_variant = Some(
+                        attr.parse_args::<Expr>()
+                            .expect("Expected an enum variant.")
+                    );
+                }
+
+                error_variant.is_none()
+            });
+
+            let error_extractor = if let Some(error) = error_variant {
+                quote! { Err(_) => return #error.into() }
+            } else {
+                quote! { Err(err) => return err.into() }
+            };
+
+            extractions.push(quote! {
+                let #var_name: #ty = match <#ty as actix_web::FromRequest>::extract(&req).await {
+                    Ok(v) => v,
+                    #error_extractor,
+                };
+            });
+
+            renamed_vars.push(var_name.clone());
         }
-    });
+    }
 
     TokenStream::from(quote! {
         #[actix_web::#method(#path)]
-        async fn #original_name(#inputs) -> impl actix_web::Responder {
+        async fn #original_name(req: actix_web::HttpRequest) -> impl actix_web::Responder {
+            #[doc(hidden)]
             #item
 
-            match #renamed_ident(#(#input_names),*).await {
+            #(#extractions)*
+
+            match #renamed_ident(#(#renamed_vars),*).await {
                 ::core::result::Result::Ok(r) => r,
                 ::core::result::Result::Err(r) => r.into()
             }
