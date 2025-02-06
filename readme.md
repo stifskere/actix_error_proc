@@ -98,6 +98,24 @@ async fn main() -> IoError {
 }
 ```
 
+There is an extra attribute we can add to route collectors to override
+it's error status code, in the case we don't want the original status code
+or we didn't create the collector and the original error does not match our
+expectations we can use `#[or]`, which lets us specify an error branch
+from any type instance that implements `Into<HttpResponse>`.
+
+```rust
+#[proof_route(post("/"))]
+async fn route(#[or(SomeError::InvalidUser)] user: Json<User>) // ...
+```
+
+In this case if `Json<User>` fails while collecting from the http request
+whatever `<SomeError::InvalidUser as Into<actix_web::HttpResponse>>.into()` returns
+will be passed directly as a response for the route.
+
+If you don't add the attribute, the request will be collected as normal and in the
+case of any error the original error implementation for that collector will
+be applied.
 ## Contributing
 
 Before making a blind pull request please, open an issue we can talk about it and
