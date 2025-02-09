@@ -247,9 +247,10 @@ pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut extractions = Vec::new();
     let mut renamed_vars = Vec::new();
 
-    for arg in &mut item.sig.inputs {
+    for (idx, arg) in item.sig.inputs.iter_mut().enumerate() {
         if let FnArg::Typed(pat_type) = arg {
-            let var_name = &pat_type.pat;
+            let var_pat = &pat_type.pat;
+            let var_name = quote::format_ident!("__arg_{idx}", span = var_pat.span());
             let ty = &pat_type.ty;
 
             let mut error_variant = None;
