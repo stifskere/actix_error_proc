@@ -273,7 +273,7 @@ pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
             };
 
             extractions.push(quote! {
-                let #var_name: #ty = match <#ty as actix_web::FromRequest>::extract(&req).await {
+                let #var_name: #ty = match <#ty as actix_web::FromRequest>::from_request(&req, &mut payload).await {
                     Ok(v) => v,
                     #error_extractor,
                 };
@@ -285,9 +285,13 @@ pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     TokenStream::from(quote! {
         #[actix_web::#method(#path)]
-        async fn #original_name(req: actix_web::HttpRequest) -> impl actix_web::Responder {
+        async fn #original_name(req: actix_web::HttpRequest, payload: actix_web::web::Payload) -> impl actix_web::Responder {
             #[doc(hidden)]
             #item
+
+            #[allow(unused)]
+            #[doc(hidden)]
+            let mut payload = payload.into_inner();
 
             #(#extractions)*
 

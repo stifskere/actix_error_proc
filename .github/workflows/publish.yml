@@ -31,7 +31,13 @@ jobs:
           fetch-depth: 0
 
       - uses: katyo/publish-crates@v2
-        name: "publish"
+        name: "publish macros"
+        with:
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          path: actix_error_proc_macros
+
+      - uses: katyo/publish-crates@v2
+        name: "publish main"
         with:
           registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
           path: actix_error_proc

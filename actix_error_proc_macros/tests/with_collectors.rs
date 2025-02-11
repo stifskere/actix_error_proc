@@ -1,6 +1,7 @@
 use actix_error_proc_macros::{proof_route, ActixError};
 use actix_web::{web::Json, HttpResponse};
 use reqwest::{Client, StatusCode};
+use serde_json::json;
 use tokio::test;
 use serde::Deserialize;
 use thiserror::Error;
@@ -71,6 +72,24 @@ async fn should_not_override() {
         .expect("Error while making the request.");
 
     assert_eq!(result.status(), StatusCode::BAD_REQUEST);
+
+    server.stop(true).await;
+    thread.join().unwrap();
+}
+
+#[test]
+async fn should_ok() {
+    let (thread, server, address) = web_server!(test2_route);
+
+    let result = Client::new()
+        .post(address)
+        .body(json!({"name": "test", "age": 18}).to_string())
+        .header("Content-Type", "application/json")
+        .send()
+        .await
+        .expect("Error while making the request.");
+
+    assert_eq!(result.status(), StatusCode::OK);
 
     server.stop(true).await;
     thread.join().unwrap();
