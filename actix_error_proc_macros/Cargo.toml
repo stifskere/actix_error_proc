@@ -15,7 +15,7 @@ thiserror = "2.0.11"
 [dev-dependencies]
 tokio = { version = "1.43.0", features = ["macros"] }
 actix_error_proc_macros = { path = "." }
-reqwest = "0.12.12"
+reqwest = "0.12.15"
 thiserror = "2.0.11"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
