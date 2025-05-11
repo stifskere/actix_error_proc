@@ -13,7 +13,7 @@ syn = { version = "2.0.98", features = ["full", "fold", "parsing"] }
 thiserror = "2.0.12"
 
 [dev-dependencies]
-tokio = { version = "1.43.0", features = ["macros"] }
+tokio = { version = "1.43.1", features = ["macros"] }
 actix_error_proc_macros = { path = "." }
 reqwest = "0.12.15"
 thiserror = "2.0.12"
