@@ -10,7 +10,7 @@ version = "1.1.4"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.10.2"
+actix-web = "4.11.0"
 actix_error_proc_macros = { version = "0.2.3", path = "../actix_error_proc_macros/" }
 thiserror = { version = "2.0.12", optional = true }
 
