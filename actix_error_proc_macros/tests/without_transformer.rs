@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use actix_error_proc_macros::{proof_route, ActixError};
 use thiserror::Error;
 use crate::shared::HttpResult;

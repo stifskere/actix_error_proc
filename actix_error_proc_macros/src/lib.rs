@@ -55,6 +55,7 @@ use syn::{
 ///
 /// And after that all the responses derived from the enum should have your own
 /// format.
+#[deprecated(since="1.2.0", note="Please consider using https://github.com/FlakySL/actix_failwrap instead.")]
 #[proc_macro_derive(ActixError, attributes(http_status, actix_error))]
 pub fn derive_actix_error(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -200,6 +201,7 @@ pub fn derive_actix_error(input: TokenStream) -> TokenStream {
 /// If you don't add the attribute, the request will be collected as normal and in the
 /// case of any error the original error implementation for that collector will
 /// be applied.
+#[deprecated(since="1.2.0", note="Please consider using https://github.com/FlakySL/actix_failwrap instead.")]
 #[proc_macro_attribute]
 pub fn proof_route(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attr as ExprCall);

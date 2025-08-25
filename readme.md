@@ -2,6 +2,12 @@
 `actix_error_proc` is a small library to integrate `thiserror` into `actix_web` routes
 with procedural macros.
 
+> [!WARNING]
+> This crate is now deprecated, meaning it is unmaintained, a rewrite has been made
+> in https://github.com/FlakySL/actix_failwrap, consider using that instead.
+>
+> **CHANGING THIS FOR actix_failwrap IS A BREAKING CHANGE, WATCH OUT BEFORE CONTINUING.**
+
 This library has two main macros as well as a `thiserror` re export under the `thiserror` feature.
 
 ## `ActixError`

@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use actix_web::{HttpResponse, HttpResponseBuilder};
 use crate::shared::HttpResult;
 use thiserror::Error;

@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use actix_error_proc_macros::{proof_route, ActixError};
 use actix_web::{web::Json, HttpResponse};
 use reqwest::{Client, StatusCode};
